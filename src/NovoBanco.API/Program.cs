@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using NovoBanco.Application.Interfaces;
 using NovoBanco.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<NovoBancoDbContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IApplicationDbContext, NovoBancoDbContext>();
+
 
 var app = builder.Build();
 
