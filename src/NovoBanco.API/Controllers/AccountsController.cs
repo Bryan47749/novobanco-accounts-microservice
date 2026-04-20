@@ -8,10 +8,12 @@ namespace NovoBanco.API.Controllers;
 public class AccountsController : ControllerBase
 {
     private readonly CreateAccountHandler _createAccountHandler;
+    private readonly GetBalanceHandler _getBalanceHandler;
 
-    public AccountsController(CreateAccountHandler createAccountHandler)
+    public AccountsController(CreateAccountHandler createAccountHandler, GetBalanceHandler getBalanceHandler )
     {
         _createAccountHandler = createAccountHandler;
+        _getBalanceHandler = getBalanceHandler;
     }
 
     [HttpPost("account")]
@@ -26,5 +28,13 @@ public class AccountsController : ControllerBase
             accountId
         });
     }
+
+    [HttpGet("account/{accountNumber}/balance")]
+    public async Task<IActionResult> GetBalance(string accountNumber, CancellationToken cancellationToken)
+    {
+        var result = await _getBalanceHandler.Handle(accountNumber, cancellationToken);
+        return Ok(result);
+    }
+
 
 }

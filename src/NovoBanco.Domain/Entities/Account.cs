@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using NovoBanco.Domain.Enums;
 
 namespace NovoBanco.Domain.Entities;
@@ -11,6 +12,8 @@ public class Account
     public AccountType Type { get; set; }
     public string Currency { get; set; } = "USD";
     public decimal Balance { get; set; }
+    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public AccountStatus Status { get; set; }
 
     public DateTime CreatedAt { get; set; }

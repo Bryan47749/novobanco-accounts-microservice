@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using NovoBanco.API.Middleware;
 using NovoBanco.Application.Interfaces;
@@ -11,7 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NovoBancoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,6 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IApplicationDbContext, NovoBancoDbContext>();
 builder.Services.AddScoped<DepositHandler>();
 builder.Services.AddScoped<CreateAccountHandler>();
+builder.Services.AddScoped<GetBalanceHandler>();
 
 var app = builder.Build();
 
