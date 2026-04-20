@@ -1,6 +1,9 @@
-
 using Microsoft.EntityFrameworkCore;
+using NovoBanco.API.Middleware;
 using NovoBanco.Application.Interfaces;
+using NovoBanco.Application.UseCases.Deposit;
+using NovoBanco.Domain.Entities;
+using NovoBanco.Domain.Enums;
 using NovoBanco.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,23 +11,53 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<NovoBancoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IApplicationDbContext, NovoBancoDbContext>();
 
+builder.Services.AddScoped<IApplicationDbContext, NovoBancoDbContext>();
+builder.Services.AddScoped<DepositHandler>();
+builder.Services.AddScoped<CreateAccountHandler>();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
+// Migraciones automáticas
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NovoBancoDbContext>();
-    db.Database.Migrate(); // Aplica las migraciones automáticamente
+    db.Database.Migrate();
+    if (!db.Customers.Any())
+    {
+        var customer = new Customer
+        {
+            Id = Guid.NewGuid(),
+            Identification = "0503947749",
+            FirstName = "Bryan",
+            LastName = "Toalumbo",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var account = new Account
+        {
+            Id = Guid.NewGuid(),
+            CustomerId = customer.Id,
+            AccountNumber = "ACC-0001",
+            Balance = 1000m,
+            Currency = "USD",
+            Type = AccountType.SAVINGS,
+            Status = AccountStatus.ACTIVE,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        db.Customers.Add(customer);
+        db.Accounts.Add(account);
+        db.SaveChanges();
+    }
 }
 
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -33,29 +66,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NovoBanco.Application.Interfaces;
 using NovoBanco.Domain.Entities;
+using NovoBanco.Domain.Enums;
 
 namespace NovoBanco.Infrastructure.Persistence;
 
@@ -26,5 +27,6 @@ public class NovoBancoDbContext : DbContext, IApplicationDbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(NovoBancoDbContext).Assembly);
+
     }
 }

@@ -9,9 +9,10 @@ public enum AccountStatus
 
 public enum AccountType
 {
-    SAVINGS,
-    CHECKING
+    SAVINGS = 0,
+    CHECKING = 1
 }
+
 
 public enum TransactionType
 {
