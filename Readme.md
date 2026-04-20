@@ -205,7 +205,7 @@ La API utiliza un middleware global para manejo de errores.
 
 * CI/CD:
 
-  * Pipeline configurado en `.github/workflows/ci.yml`
+  * Pipeline configurado en `workflows/ci.yml`
   * Ejecuta build, tests y validación de contenedor
 
 ---
