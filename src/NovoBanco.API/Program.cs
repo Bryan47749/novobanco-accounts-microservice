@@ -45,7 +45,7 @@ using (var scope = app.Services.CreateScope())
     {
         var customer = new Customer
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.Parse("a7450ace-24fe-4979-ab7c-33fa53880b57"),
             Identification = "0503947749",
             FirstName = "Bryan",
             LastName = "Toalumbo",
@@ -54,7 +54,7 @@ using (var scope = app.Services.CreateScope())
 
         var account = new Account
         {
-            Id = Guid.NewGuid(),
+            Id =Guid.Parse("3e442e25-17f7-4b36-b5da-81f36786f49a"),
             CustomerId = customer.Id,
             AccountNumber = "ACC-0001",
             Balance = 1000m,
