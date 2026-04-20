@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NovoBanco.API.Middleware;
 using NovoBanco.Application.Interfaces;
 using NovoBanco.Application.UseCases.Deposit;
+using NovoBanco.Application.UseCases.Transfer;
 using NovoBanco.Application.UseCases.Withdraw;
 using NovoBanco.Domain.Entities;
 using NovoBanco.Domain.Enums;
@@ -29,8 +30,7 @@ builder.Services.AddScoped<CreateAccountHandler>();
 builder.Services.AddScoped<GetBalanceHandler>();
 builder.Services.AddScoped<GetTransactionsHandler>();
 builder.Services.AddScoped<WithdrawHandler>();
-
-
+builder.Services.AddScoped<TransferHandler>();
 
 var app = builder.Build();
 
