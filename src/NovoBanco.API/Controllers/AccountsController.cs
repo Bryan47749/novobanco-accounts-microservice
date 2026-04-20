@@ -9,11 +9,13 @@ public class AccountsController : ControllerBase
 {
     private readonly CreateAccountHandler _createAccountHandler;
     private readonly GetBalanceHandler _getBalanceHandler;
+    private readonly GetTransactionsHandler _getTransactionsHandler;
 
-    public AccountsController(CreateAccountHandler createAccountHandler, GetBalanceHandler getBalanceHandler )
+    public AccountsController(CreateAccountHandler createAccountHandler, GetBalanceHandler getBalanceHandler, GetTransactionsHandler getTransactionsHandler)
     {
         _createAccountHandler = createAccountHandler;
         _getBalanceHandler = getBalanceHandler;
+        _getTransactionsHandler = getTransactionsHandler;
     }
 
     [HttpPost("account")]
@@ -36,5 +38,15 @@ public class AccountsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("account/{id}/transactions")]
+    public async Task<IActionResult> GetTransactions(
+    Guid id,
+    int page = 1,
+    int pageSize = 20,
+    CancellationToken cancellationToken = default)
+    {
+        var result = await _getTransactionsHandler.Handle(id, page, pageSize, cancellationToken);
+        return Ok(result);
+    }
 
 }

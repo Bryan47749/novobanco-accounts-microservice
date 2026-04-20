@@ -26,6 +26,8 @@ builder.Services.AddScoped<IApplicationDbContext, NovoBancoDbContext>();
 builder.Services.AddScoped<DepositHandler>();
 builder.Services.AddScoped<CreateAccountHandler>();
 builder.Services.AddScoped<GetBalanceHandler>();
+builder.Services.AddScoped<GetTransactionsHandler>();
+
 
 var app = builder.Build();
 

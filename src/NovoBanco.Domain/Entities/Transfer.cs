@@ -5,7 +5,6 @@ namespace NovoBanco.Domain.Entities;
 public class Transfer
 {
     public Guid Id { get; set; }
-
     public Guid FromAccountId { get; set; }
     public Guid ToAccountId { get; set; }
 
