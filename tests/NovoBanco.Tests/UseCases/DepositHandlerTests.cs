@@ -14,7 +14,7 @@ public class DepositHandlerTests
         var account = new Account
         {
             Id = Guid.NewGuid(),
-            AccountNumber = $"ACC-{Guid.NewGuid().ToString().Substring(0, 8)}", // ← asignar valor
+            AccountNumber = $"ACC-{Guid.NewGuid().ToString().Substring(0, 8)}",
             Balance = 100,
             Status = AccountStatus.ACTIVE
         };
